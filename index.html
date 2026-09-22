@@ -535,10 +535,23 @@
 
 </div>
 
+
+<!--
+  Hidden iframe used for Google Forms submission.
+  It does not change the appearance of the page.
+-->
+<iframe
+  name="googleFormFrame"
+  id="googleFormFrame"
+  style="display:none;">
+</iframe>
+
+
 <script>
 
   /*
    * YOUR TELEGRAM BOT
+   *
    * Confirmed username:
    * @MoneyMasterSystemBot
    *
@@ -546,31 +559,76 @@
    */
   const BOT_USERNAME = "MoneyMasterSystemBot";
 
-  const form = document.getElementById('leadForm');
-  const nameInput = document.getElementById('fullname');
-  const phoneInput = document.getElementById('whatsapp');
 
-  const nameError = document.getElementById('nameError');
-  const phoneError = document.getElementById('phoneError');
-
-  const submitBtn = document.getElementById('submitBtn');
-  const statusMsg = document.getElementById('statusMsg');
+  /*
+   * YOUR GOOGLE FORM
+   *
+   * This is the formResponse endpoint,
+   * not the normal viewform page.
+   */
+  const GOOGLE_FORM_URL =
+    "https://docs.google.com/forms/d/e/1FAIpQLSeFXsVSNbtH78jzumns7Y2eUvZ5oinR9n_KyI6Rz7Ddk5UClg/formResponse";
 
 
   /*
-   * Check WhatsApp number
+   * GOOGLE FORM FIELD IDs
+   *
+   * Full Name:
+   * entry.1187827866
+   *
+   * WhatsApp Number:
+   * entry.1324835494
+   */
+  const NAME_FIELD =
+    "entry.1187827866";
+
+  const PHONE_FIELD =
+    "entry.1324835494";
+
+
+  /*
+   * GET PAGE ELEMENTS
+   */
+  const form =
+    document.getElementById('leadForm');
+
+  const nameInput =
+    document.getElementById('fullname');
+
+  const phoneInput =
+    document.getElementById('whatsapp');
+
+  const nameError =
+    document.getElementById('nameError');
+
+  const phoneError =
+    document.getElementById('phoneError');
+
+  const submitBtn =
+    document.getElementById('submitBtn');
+
+  const statusMsg =
+    document.getElementById('statusMsg');
+
+
+  /*
+   * CHECK WHATSAPP NUMBER
    */
   function isValidPhone(value){
 
-    const digits = value.replace(/\D/g, '');
+    const digits =
+      value.replace(/\D/g, '');
 
-    return digits.length >= 10 && digits.length <= 14;
+    return (
+      digits.length >= 10 &&
+      digits.length <= 14
+    );
 
   }
 
 
   /*
-   * FORM SUBMISSION
+   * SUBMIT FORM
    */
   form.addEventListener('submit', function(e){
 
@@ -578,8 +636,11 @@
 
     let valid = true;
 
-    const name = nameInput.value.trim();
-    const phone = phoneInput.value.trim();
+    const name =
+      nameInput.value.trim();
+
+    const phone =
+      phoneInput.value.trim();
 
 
     /*
@@ -619,36 +680,138 @@
 
 
     /*
-     * STOP IF FORM IS INVALID
+     * STOP IF INVALID
      */
-    if(!valid) return;
+    if(!valid){
+
+      return;
+
+    }
 
 
     /*
-     * DISABLE BUTTON WHILE REDIRECTING
+     * DISABLE BUTTON
      */
     submitBtn.disabled = true;
-    submitBtn.textContent = "Opening Telegram...";
 
-    statusMsg.textContent = "Opening Telegram…";
+    submitBtn.textContent =
+      "Opening Telegram...";
+
+    statusMsg.textContent =
+      "Saving your details…";
+
     statusMsg.classList.add('show');
 
 
     /*
-     * SAVE LEAD LOCALLY
+     * SAVE TO GOOGLE FORM
      *
-     * This keeps the existing behavior of your page.
+     * We create a temporary hidden form.
+     * This avoids the CORS problem that can
+     * happen with fetch().
      */
     try{
 
-      const leads = JSON.parse(
-        localStorage.getItem('mm_leads') || '[]'
+      const googleForm =
+        document.createElement('form');
+
+      googleForm.method = 'POST';
+
+      googleForm.action =
+        GOOGLE_FORM_URL;
+
+      googleForm.target =
+        'googleFormFrame';
+
+      googleForm.style.display =
+        'none';
+
+
+      /*
+       * NAME FIELD
+       */
+      const nameField =
+        document.createElement('input');
+
+      nameField.type = 'hidden';
+
+      nameField.name =
+        NAME_FIELD;
+
+      nameField.value =
+        name;
+
+
+      /*
+       * PHONE FIELD
+       */
+      const phoneField =
+        document.createElement('input');
+
+      phoneField.type = 'hidden';
+
+      phoneField.name =
+        PHONE_FIELD;
+
+      phoneField.value =
+        phone;
+
+
+      /*
+       * ADD FIELDS
+       */
+      googleForm.appendChild(
+        nameField
       );
 
+      googleForm.appendChild(
+        phoneField
+      );
+
+
+      /*
+       * ADD FORM TO PAGE
+       */
+      document.body.appendChild(
+        googleForm
+      );
+
+
+      /*
+       * SUBMIT TO GOOGLE
+       */
+      googleForm.submit();
+
+
+    }catch(err){
+
+      /*
+       * If Google Forms has an issue,
+       * Telegram can still continue.
+       */
+
+    }
+
+
+    /*
+     * ALSO KEEP YOUR EXISTING
+     * LOCAL STORAGE BEHAVIOR
+     */
+    try{
+
+      const leads =
+        JSON.parse(
+          localStorage.getItem('mm_leads') || '[]'
+        );
+
       leads.push({
+
         name: name,
+
         phone: phone,
+
         ts: new Date().toISOString()
+
       });
 
       localStorage.setItem(
@@ -669,13 +832,12 @@
      * CREATE TELEGRAM START PAYLOAD
      *
      * Example:
-     * Clinton Test
+     *
+     * Clinton Cosmas
      *
      * becomes:
-     * Clinton_Test
      *
-     * Your Replit bot already reads this payload
-     * and uses it to personalize the welcome message.
+     * Clinton_Cosmas
      */
     const safeName =
       encodeURIComponent(
@@ -686,24 +848,31 @@
 
 
     /*
-     * DIRECT TELEGRAM BOT LINK
-     *
-     * This is the important connection.
+     * YOUR EXISTING TELEGRAM LINK
      */
     const telegramUrl =
       `https://t.me/${BOT_USERNAME}?start=${safeName}`;
 
 
     /*
-     * OPEN TELEGRAM IMMEDIATELY
+     * GIVE GOOGLE FORMS A MOMENT
+     * TO RECEIVE THE SUBMISSION
      *
-     * No 700ms delay.
+     * Then continue to Telegram.
      */
-    window.location.href = telegramUrl;
+    setTimeout(function(){
+
+      statusMsg.textContent =
+        "Opening Telegram…";
+
+      window.location.href =
+        telegramUrl;
+
+    }, 500);
 
   });
 
 </script>
 
 </body>
-  </html>
+</html>
