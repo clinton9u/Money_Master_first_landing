@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free PDF — The Money Master Starter Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg: #000000;
+    --panel: #0E0E0E;
+    --panel-2: #131313;
+    --line: #2A2A2A;
+    --ink: #F5F3EF;
+    --ink-dim: #9A9A9A;
+    --gold: #D4A537;
+    --gold-soft: rgba(212,165,55,0.14);
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+  }
+
+  body{
+    background: var(--bg);
+    background-image:
+      radial-gradient(
+        60% 45% at 75% 10%,
+        rgba(212,165,55,0.10) 0%,
+        transparent 60%
+      );
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 0 0 56px;
+  }
+
+  .wrap{
+    max-width: 460px;
+    width:100%;
+  }
+
+  .brandbar{
+    text-align:center;
+    padding: 34px 20px 0;
+    font-family:'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+  }
+
+  .brandbar span{
+    color: var(--gold);
+  }
+
+  .eyebrow{
+    text-align:center;
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    margin: 26px 20px 18px;
+  }
+
+  h1{
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(32px, 8.5vw, 44px);
+    line-height: 1.16;
+    text-align:center;
+    margin: 0 20px 22px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 .hl{
+    color: var(--gold);
+  }
+
+  .sub{
+    text-align:center;
+    color: var(--ink-dim);
+    font-size: 15.5px;
+    line-height: 1.6;
+    max-width: 380px;
+    margin: 0 auto 30px;
+    padding: 0 22px;
+  }
+
+  .pricebar{
+    display:flex;
+    align-items:baseline;
+    justify-content:center;
+    gap: 10px;
+    margin: 0 20px 8px;
+  }
+
+  .pricebar .old{
+    font-family:'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--ink-dim);
+    text-decoration: line-through;
+    text-decoration-color: var(--ink-dim);
+  }
+
+  .pricebar .new{
+    font-family:'Playfair Display', serif;
+    font-weight: 800;
+    font-size: 30px;
+    color: var(--gold);
+  }
+
+  .pricecaption{
+    text-align:center;
+    color: var(--ink-dim);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    margin: 0 0 34px;
+  }
+
+  /* ---- PDF cover mockup ---- */
+
+  .coverstage{
+    display:flex;
+    justify-content:center;
+    margin: 0 auto 34px;
+    padding: 0 44px;
+  }
+
+  .pdfcover{
+    width: 220px;
+    aspect-ratio: 3/4;
+    border-radius: 4px;
+    background: linear-gradient(160deg, #161616 0%, #050505 75%);
+    border: 1px solid var(--line);
+    box-shadow:
+      0 40px 70px -30px rgba(0,0,0,0.9),
+      0 0 50px -18px rgba(212,165,55,0.22);
+    position: relative;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    padding: 24px 18px;
+  }
+
+  .pdfcover .brand{
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+
+  .pdfcover .title{
+    font-family:'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.1;
+    text-align:center;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .pdfcover .title span{
+    color: var(--gold);
+  }
+
+  .pdfcover .desc{
+    font-size: 10px;
+    color: var(--ink-dim);
+    text-align:center;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    letter-spacing: 0.02em;
+  }
+
+  .pdfcover .rule{
+    width: 34px;
+    height: 1px;
+    background: var(--gold);
+    margin-bottom: 14px;
+    opacity: 0.6;
+  }
+
+  .freetag{
+    position:absolute;
+    top: -10px;
+    right: 14px;
+    background: var(--gold);
+    color: #1A1400;
+    font-weight: 800;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    padding: 6px 12px;
+    border-radius: 4px;
+  }
+
+  .whatsinside{
+    list-style:none;
+    margin: 0 20px 34px;
+    display:grid;
+    gap: 12px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 24px 22px;
+  }
+
+  .whatsinside .heading{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .whatsinside li{
+    display:flex;
+    gap:11px;
+    align-items:flex-start;
+    font-size: 14px;
+    color: var(--ink-dim);
+    line-height: 1.55;
+  }
+
+  .whatsinside li .check{
+    flex-shrink:0;
+    color: var(--gold);
+    font-weight:700;
+    margin-top: 1px;
+  }
+
+  .whatsinside li b{
+    color: var(--ink);
+    font-weight:600;
+  }
+
+  .panel{
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 28px 22px 26px;
+    margin: 0 20px;
+  }
+
+  .panel .tag{
+    display:flex;
+    justify-content:center;
+    margin-bottom: 16px;
+  }
+
+  .panel .tag span{
+    color: var(--gold);
+    font-size: 11.5px;
+    font-weight:700;
+    letter-spacing: 0.1em;
+  }
+
+  .panel h3{
+    font-family:'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    text-align:center;
+  }
+
+  .panel .desc2{
+    color: var(--ink-dim);
+    font-size: 13.5px;
+    text-align:center;
+    margin: 0 0 24px;
+    line-height: 1.55;
+  }
+
+  label{
+    display:block;
+    font-size: 12px;
+    color: var(--ink-dim);
+    margin: 0 0 6px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  input{
+    width:100%;
+    background: #000000;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 13px 14px;
+    color: var(--ink);
+    font-size: 15px;
+    font-family: inherit;
+    margin-bottom: 16px;
+    transition: border-color 0.15s ease;
+  }
+
+  input::placeholder{
+    color: #5A5A5A;
+  }
+
+  input:focus{
+    outline:none;
+    border-color: var(--gold);
+  }
+
+  input.error{
+    border-color: #C15B4A;
+  }
+
+  .field-error{
+    color: #D9846F;
+    font-size: 11.5px;
+    margin: -12px 0 14px;
+    display:none;
+  }
+
+  .field-error.show{
+    display:block;
+  }
+
+  button{
+    width:100%;
+    background: var(--gold);
+    color: #1A1400;
+    border:none;
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 15.5px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor:pointer;
+    transition: transform 0.12s ease, filter 0.12s ease;
+    margin-top: 4px;
+  }
+
+  button:active{
+    transform: scale(0.98);
+  }
+
+  button:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  button:not(:disabled):hover{
+    filter: brightness(1.06);
+  }
+
+  .fine{
+    text-align:center;
+    color: var(--ink-dim);
+    font-size: 11.5px;
+    margin-top: 14px;
+    line-height:1.5;
+  }
+
+  .status{
+    text-align:center;
+    font-size: 13px;
+    color: var(--gold);
+    margin-top: 16px;
+    display:none;
+    font-weight:600;
+  }
+
+  .status.show{
+    display:block;
+  }
+
+  footer{
+    margin-top: 42px;
+    text-align:center;
+    color: #444444;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <div class="brandbar">
+    THE MONEY <span>MASTER</span> SYSTEM
+  </div>
+
+  <div class="eyebrow">
+    A FREE PREVIEW FOR NIGERIANS
+  </div>
+
+  <h1>
+    Get the free <span class="hl">PDF</span> behind a calmer relationship with money.
+  </h1>
+
+  <p class="sub">
+    5 practical steps to stop your salary from disappearing before month-end even reaches you — pulled straight from the full Money Master System.
+  </p>
+
+  <div class="coverstage">
+    <div class="pdfcover">
+
+      <span class="freetag">
+        FREE PDF
+      </span>
+
+      <div class="brand">
+        MONEY MASTER SYSTEM
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="title">
+        THE<br>
+        <span>STARTER</span><br>
+        PDF
+      </div>
+
+      <div class="desc">
+        5 Steps To Stop Your Money From Disappearing
+      </div>
+
+    </div>
+  </div>
+
+  <div class="whatsinside">
+
+    <div class="heading">
+      Inside this free PDF:
+    </div>
+
+    <li>
+      <span class="check">✓</span>
+      <span>
+        Find out exactly <b>where your money is leaking</b> every month
+      </span>
+    </li>
+
+    <li>
+      <span class="check">✓</span>
+      <span>
+        Build a budget that works with <b>real Nigerian life</b>, not perfection
+      </span>
+    </li>
+
+    <li>
+      <span class="check">✓</span>
+      <span>
+        Start an emergency fund, <b>even on a small salary</b>
+      </span>
+    </li>
+
+    <li>
+      <span class="check">✓</span>
+      <span>
+        Spot a <b>Ponzi scheme</b> before it spots you
+      </span>
+    </li>
+
+  </div>
+
+  <div class="panel">
+
+    <div class="tag">
+      <span>FREE FOR A LIMITED TIME</span>
+    </div>
+
+    <h3>
+      Where should we send your free PDF?
+    </h3>
+
+    <p class="desc2">
+      Drop your name and WhatsApp number. We'll send the PDF straight to your Telegram.
+    </p>
+
+    <form id="leadForm" novalidate>
+
+      <label for="fullname">
+        Your full name
+      </label>
+
+      <input
+        type="text"
+        id="fullname"
+        placeholder="e.g. Chioma Okafor"
+        autocomplete="name"
+      >
+
+      <div class="field-error" id="nameError">
+        Please enter your name.
+      </div>
+
+      <label for="whatsapp">
+        Your WhatsApp number
+      </label>
+
+      <input
+        type="tel"
+        id="whatsapp"
+        placeholder="e.g. 08012345678"
+        autocomplete="tel"
+      >
+
+      <div class="field-error" id="phoneError">
+        Please enter a valid WhatsApp number.
+      </div>
+
+      <button type="submit" id="submitBtn">
+        Send It To My Telegram
+      </button>
+
+      <div class="status" id="statusMsg">
+        Redirecting you to Telegram…
+      </div>
+
+    </form>
+
+    <p class="fine">
+      No spam. Your number is only used to send the free PDF.
+    </p>
+
+  </div>
+
+  <footer>
+    THE MONEY MASTER SYSTEM — COACH CLINTON
+  </footer>
+
+</div>
+
+<script>
+
+  /*
+   * YOUR TELEGRAM BOT
+   * Confirmed username:
+   * @MoneyMasterSystemBot
+   *
+   * Do not include the @ symbol here.
+   */
+  const BOT_USERNAME = "MoneyMasterSystemBot";
+
+  const form = document.getElementById('leadForm');
+  const nameInput = document.getElementById('fullname');
+  const phoneInput = document.getElementById('whatsapp');
+
+  const nameError = document.getElementById('nameError');
+  const phoneError = document.getElementById('phoneError');
+
+  const submitBtn = document.getElementById('submitBtn');
+  const statusMsg = document.getElementById('statusMsg');
+
+
+  /*
+   * Check WhatsApp number
+   */
+  function isValidPhone(value){
+
+    const digits = value.replace(/\D/g, '');
+
+    return digits.length >= 10 && digits.length <= 14;
+
+  }
+
+
+  /*
+   * FORM SUBMISSION
+   */
+  form.addEventListener('submit', function(e){
+
+    e.preventDefault();
+
+    let valid = true;
+
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+
+
+    /*
+     * NAME VALIDATION
+     */
+    if(name.length < 2){
+
+      nameInput.classList.add('error');
+      nameError.classList.add('show');
+
+      valid = false;
+
+    }else{
+
+      nameInput.classList.remove('error');
+      nameError.classList.remove('show');
+
+    }
+
+
+    /*
+     * PHONE VALIDATION
+     */
+    if(!isValidPhone(phone)){
+
+      phoneInput.classList.add('error');
+      phoneError.classList.add('show');
+
+      valid = false;
+
+    }else{
+
+      phoneInput.classList.remove('error');
+      phoneError.classList.remove('show');
+
+    }
+
+
+    /*
+     * STOP IF FORM IS INVALID
+     */
+    if(!valid) return;
+
+
+    /*
+     * DISABLE BUTTON WHILE REDIRECTING
+     */
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Opening Telegram...";
+
+    statusMsg.textContent = "Opening Telegram…";
+    statusMsg.classList.add('show');
+
+
+    /*
+     * SAVE LEAD LOCALLY
+     *
+     * This keeps the existing behavior of your page.
+     */
+    try{
+
+      const leads = JSON.parse(
+        localStorage.getItem('mm_leads') || '[]'
+      );
+
+      leads.push({
+        name: name,
+        phone: phone,
+        ts: new Date().toISOString()
+      });
+
+      localStorage.setItem(
+        'mm_leads',
+        JSON.stringify(leads)
+      );
+
+    }catch(err){
+
+      /*
+       * Ignore storage errors.
+       */
+
+    }
+
+
+    /*
+     * CREATE TELEGRAM START PAYLOAD
+     *
+     * Example:
+     * Clinton Test
+     *
+     * becomes:
+     * Clinton_Test
+     *
+     * Your Replit bot already reads this payload
+     * and uses it to personalize the welcome message.
+     */
+    const safeName =
+      encodeURIComponent(
+        name
+          .replace(/\s+/g, '_')
+          .replace(/[^a-zA-Z0-9_]/g, '')
+      ) || 'Friend';
+
+
+    /*
+     * DIRECT TELEGRAM BOT LINK
+     *
+     * This is the important connection.
+     */
+    const telegramUrl =
+      `https://t.me/${BOT_USERNAME}?start=${safeName}`;
+
+
+    /*
+     * OPEN TELEGRAM IMMEDIATELY
+     *
+     * No 700ms delay.
+     */
+    window.location.href = telegramUrl;
+
+  });
+
+</script>
+
+</body>
+  </html>
